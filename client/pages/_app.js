@@ -1,5 +1,5 @@
 import { ThirdwebProvider } from "@thirdweb-dev/react";
-import { Navbar } from "../components";
+import { Navbar, WalletBar } from "../components";
 import "../styles/globals.css";
 
 // This is the chain your dApp will work on.
@@ -8,12 +8,16 @@ import "../styles/globals.css";
 const activeChain = "ethereum";
 
 function MyApp({ Component, pageProps }) {
-  return (
-    <ThirdwebProvider activeChain={activeChain}>
-        <Navbar />
-        <Component {...pageProps} />
-    </ThirdwebProvider>
-  );
+	return (
+		<ThirdwebProvider activeChain={activeChain}>
+			<div className="h-[12vh]">
+				<Navbar />
+			</div>
+			<div className="h-[88vh]">
+				<Component {...pageProps} />
+			</div>
+		</ThirdwebProvider>
+	);
 }
 
 export default MyApp;
