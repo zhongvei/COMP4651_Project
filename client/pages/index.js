@@ -1,52 +1,22 @@
-import { ConnectWallet } from "@thirdweb-dev/react";
-import styles from "../styles/Home.module.css";
-
 export default function Home() {
   return (
-    <div className={styles.container}>
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://thirdweb.com/">thirdweb</a>!
-        </h1>
+    <div className="bg-cover bg-no-repeat bg-background h-full w-full">
+        <div className="fixed top-[32vh] left-[7vw]">
+            <div>
+                <p className="font-bold text-[82px] text-white">
+                    Re-Thinking The
+                </p>
+                <p className="font-bold text-[82px] text-white">
+                    Housing Crisis
+                </p>
+            </div>
+            <div>
+            <p className="text-[28px] text-white">
+                Building a better Hong Kong, one home at a time
+            </p>
+            </div>
 
-        <p className={styles.description}>
-          Get started by configuring your desired network in{" "}
-          <code className={styles.code}>pages/_app.js</code>, then modify the{" "}
-          <code className={styles.code}>pages/index.js</code> file!
-        </p>
-
-        <div className={styles.connect}>
-          <ConnectWallet />
         </div>
-
-        <div className={styles.grid}>
-          <a href="https://portal.thirdweb.com/" className={styles.card}>
-            <h2>Portal &rarr;</h2>
-            <p>
-              Guides, references and resources that will help you build with
-              thirdweb.
-            </p>
-          </a>
-
-          <a href="https://thirdweb.com/dashboard" className={styles.card}>
-            <h2>Dashboard &rarr;</h2>
-            <p>
-              Deploy, configure and manage your smart contracts from the
-              dashboard.
-            </p>
-          </a>
-
-          <a
-            href="https://portal.thirdweb.com/templates"
-            className={styles.card}
-          >
-            <h2>Templates &rarr;</h2>
-            <p>
-              Discover and clone template projects showcasing thirdweb features.
-            </p>
-          </a>
-        </div>
-      </main>
     </div>
   );
 }

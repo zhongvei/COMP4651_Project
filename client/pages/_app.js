@@ -1,4 +1,5 @@
 import { ThirdwebProvider } from "@thirdweb-dev/react";
+import { Navbar } from "../components";
 import { StateContextProvider } from "../context";
 import "../styles/globals.css";
 
@@ -8,13 +9,18 @@ import "../styles/globals.css";
 const activeChain = "localhost";
 
 function MyApp({ Component, pageProps }) {
-  return (
-    <ThirdwebProvider activeChain={activeChain}>
-      <StateContextProvider>
-        <Component {...pageProps} />
-      </StateContextProvider>
-    </ThirdwebProvider>
-  );
+	return (
+		<ThirdwebProvider activeChain={activeChain}>
+			<StateContextProvider>
+				<div className="h-[12vh]">
+					<Navbar />
+				</div>
+				<div className="h-[88vh]">
+					<Component {...pageProps} />
+				</div>
+			</StateContextProvider>
+		</ThirdwebProvider>
+	);
 }
 
 export default MyApp;
