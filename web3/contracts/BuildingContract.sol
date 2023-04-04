@@ -17,7 +17,7 @@ contract BuildingContract {
         string homeAddress;
         uint256 duration;
         uint256 price;
-        uint256 avalible;
+        uint256 available;
         uint256 taken;
         uint256 numFlats;
         Flat[] flats;
@@ -42,7 +42,7 @@ contract BuildingContract {
         b.duration = _duration;
         b.price = _price;
         b.numFlats = 0;
-        b.avalible = 0;
+        b.available = 0;
         b.taken = 0;
 
         buildingsName[b.name] = b;
@@ -60,7 +60,7 @@ contract BuildingContract {
         b.flats.push(flat);
 
         b.numFlats++;
-        b.avalible++;
+        b.available++;
     }
 
     function getBuildings() public view returns (Building[] memory) {
