@@ -5,10 +5,14 @@ contract BuildingContract {
     string public name;
     mapping(uint256 => Building) buildings;
     mapping(string => Building) buildingsName;
+    mapping(string => mapping(string => uint256)) mappings;
     uint256 public numOfBuildings;
+
+    event Buy(address indexed owner, uint256 price, uint256 timestamp, string flat);
 
     struct Flat {
         string name;
+        bool vacant;
     }
 
     struct Building {
@@ -55,12 +59,24 @@ contract BuildingContract {
     ) public {
         Building storage b = buildingsName[_buildingName];
 
-        Flat memory flat = Flat(_flatName);
+        Flat memory flat = Flat(_flatName, true);
 
         b.flats.push(flat);
 
-        b.numFlats++;
         b.available++;
+
+        mappings[b.name][_flatName] = b.numFlats++;
+    }
+
+    function buyFlat(string memory building, string memory flat) public {
+        Building storage b = buildingsName[building];
+        Flat storage f = b.flats[mappings[building][flat]];
+
+        f.vacant = false;
+        --b.available;
+        ++b.taken;
+
+        emit Buy(msg.sender, b.price, block.timestamp, flat);
     }
 
     function getBuildings() public view returns (Building[] memory) {

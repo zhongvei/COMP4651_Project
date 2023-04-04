@@ -6,7 +6,7 @@ const StateContext = createContext();
 export const StateContextProvider = ({ children }) => {
 
     // TODO : add the contract address
-    const { contract } = useContract("0x98bED60A3Cd26F2311bAeac287E91A8a90B904A3");
+    const { contract } = useContract("0x2D10A3DCB8215e26d864d63E1A342F7E18209869");
 
     // Address of your metamask
     const address = useAddress();
@@ -17,6 +17,19 @@ export const StateContextProvider = ({ children }) => {
     // TODO: create buildings
     const createBuildings = async() => {
         console.log("Create Buildings....");
+    }
+
+    const getTransaction = async() => {
+        const tx = await contract.events.getAllEvents();
+
+        const parsedTx = tx.map((t) => ({
+            buyer: t.data.owner,
+            flat: t.data[3],
+            price: t.data.price.toNumber(),
+            timestamp: new Date(t.data.timestamp.toNumber())
+        }))
+
+        return parsedTx;
     }
 
     const getBuildings = async() => {
@@ -37,7 +50,8 @@ export const StateContextProvider = ({ children }) => {
                 address,
                 connect,
                 createBuildings,
-                getBuildings
+                getBuildings,
+                getTransaction
             }}
         >
             {children}
