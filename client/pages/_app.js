@@ -12,12 +12,8 @@ function MyApp({ Component, pageProps }) {
 	return (
 		<ThirdwebProvider activeChain={activeChain}>
 			<StateContextProvider>
-				<div className="h-[12vh]">
-					<Navbar />
-				</div>
-				<div className="h-[88vh]">
-					<Component {...pageProps} />
-				</div>
+                <Navbar />
+                <Component {...pageProps} />
 			</StateContextProvider>
 		</ThirdwebProvider>
 	);

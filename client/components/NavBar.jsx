@@ -30,7 +30,7 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="bg-white h-full">
+        <nav className="bg-white h-[12vh]">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                 <div className="flex items-center">
                     <Image src="/logo.png" width={65} height={65} alt="Logo" />
