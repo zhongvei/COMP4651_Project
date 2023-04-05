@@ -18,7 +18,10 @@ contract BuildingContract {
     );
 
     struct Flat {
+        address owner;
         string unit;
+        uint256 price;
+        uint256 duration;
         uint256 area;
         uint256 room;
         bool vacant;
@@ -29,7 +32,6 @@ contract BuildingContract {
         string name;
         string homeAddress;
         uint256 duration;
-        uint256 price;
         uint256 available;
         uint256 taken;
         uint256 numFlats;
@@ -41,19 +43,30 @@ contract BuildingContract {
         numOfBuildings = 0;
     }
 
+    modifier notContract(address _sender) {
+        uint256 size;
+        assembly {
+            size := extcodesize(_sender)
+        }
+
+        require(size == 0, "Cannot send from a smart contract.");
+        _;
+    }
+
+    modifier validETH() {
+        require(msg.value > 0, "Amount must be greater than 0");
+        _;
+    }
+
     function createBuilding(
         string memory _name,
-        string memory _homeAddress,
-        uint256 _duration,
-        uint256 _price
+        string memory _homeAddress
     ) public {
         Building storage b = buildings[numOfBuildings++];
 
         b.owner = msg.sender;
         b.name = _name;
         b.homeAddress = _homeAddress;
-        b.duration = _duration;
-        b.price = _price;
         b.numFlats = 0;
         b.available = 0;
         b.taken = 0;
@@ -65,12 +78,22 @@ contract BuildingContract {
     function createFlat(
         string memory _buildingName,
         string memory _unit,
+        uint256 _price,
+        uint256 _duartion,
         uint256 _area,
         uint256 _room
     ) public {
         Building storage b = buildingsName[_buildingName];
 
-        Flat memory flat = Flat(_unit, _area, _room, true);
+        Flat memory flat = Flat(
+            msg.sender,
+            _unit,
+            _price,
+            _duartion,
+            _area,
+            _room,
+            true
+        );
 
         b.flats.push(flat);
 
@@ -79,15 +102,29 @@ contract BuildingContract {
         mappings[b.name][_unit] = b.numFlats++;
     }
 
-    function buyFlat(string memory building, string memory flat) public {
+    function buyFlat(
+        string memory building,
+        string memory flat
+    ) public payable notContract(msg.sender) validETH returns (bool) {
         Building storage b = buildingsName[building];
         Flat storage f = b.flats[mappings[building][flat]];
+
+        require(msg.sender.balance >= f.price, "Insufficient ETH balance.");
+        require(
+            msg.value == f.price,
+            "Amount of ETH send does not match the amount specified."
+        );
+
+        (bool success, ) = payable(f.owner).call{value: msg.value}("");
+
+        if (!success) return success;
 
         f.vacant = false;
         --b.available;
         ++b.taken;
 
-        emit Buy(msg.sender, b.price, block.timestamp, flat);
+        emit Buy(msg.sender, f.price / 1 ether, block.timestamp, flat);
+        return success;
     }
 
     function getBuildings(
@@ -96,7 +133,7 @@ contract BuildingContract {
         uint256 num = addressToCount[_address];
         Building[] memory buildings = new Building[](num);
 
-        for(uint i = 0 ; i < num ; ++i) {
+        for (uint i = 0; i < num; ++i) {
             buildings[i] = addressToBuilding[_address][i];
         }
 

@@ -1,12 +1,13 @@
 import React, { createContext, useContext } from 'react'
 import { useAddress, useContract, useMetamask } from '@thirdweb-dev/react'
+import { ethers } from 'ethers';
 
 const StateContext = createContext();
 
 export const StateContextProvider = ({ children }) => {
 
     // TODO : add the contract address
-    const { contract } = useContract("");
+    const { contract } = useContract("0xdE0e632217452F2dc0d8AAF3772a7dFA7eAd4afE");
 
     // Address of your metamask
     const address = useAddress();
@@ -26,7 +27,7 @@ export const StateContextProvider = ({ children }) => {
             buyer: t.data.owner,
             flat: t.data[3],
             price: t.data.price.toNumber(),
-            timestamp: new Date(t.data.timestamp.toNumber())
+            timestamp: new Date(t.data.timestamp.toNumber()).toString()
         }))
 
         return parsedTx;
@@ -70,6 +71,10 @@ export const StateContextProvider = ({ children }) => {
         return parsedFlats;
     }
 
+    const buyFlat = async (building, flat, token) => {
+        await contract.call('buyFlat', building, flat, { value: token });
+    }
+
     return (
         <StateContext.Provider
             value={{
@@ -79,7 +84,8 @@ export const StateContextProvider = ({ children }) => {
                 getAllBuildings,
                 getBuildings,
                 getFlats,
-                getTransaction
+                getTransaction,
+                buyFlat
             }}
         >
             {children}
