@@ -1,52 +1,84 @@
+import { useState } from "react";
 import { ConnectWallet } from "@thirdweb-dev/react";
 import styles from "../styles/Home.module.css";
+import { useStateContext } from "../context";
 
 export default function Home() {
+
+  const { getBuildings, getTransaction, getFlats, buyFlat, connect } = useStateContext();
+
+  const [test, settest] = useState({
+    name: '',
+    available: '',
+    taken: ''
+  })
+
+  const [tx, settx] = useState({
+    buyer: '',
+    flat: '',
+    price: ''
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      console.log("clicked")
+
+      const data = await getBuildings();
+      settest(data);
+      // console.log(`${test.name} ${test.available} ${test.taken}`);
+      // console.log(data.available.toNumber());
+    } catch (error) {
+      console.log(`error ${error}`);
+    }
+  }
+
+  const handleEvents = async (e) => {
+    e.preventDefault();
+    try {
+      const events = await getTransaction();
+      console.log(events)
+      settx(events)
+      // console.log(tx[0])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleFlats = async (e) => {
+    e.preventDefault();
+    try {
+      const events = await getFlats("building1");
+      console.log(events);
+      // settx(events)
+      // console.log(tx[0])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleBuyFlat = async(e) => {
+    e.preventDefault();
+    try {
+      const reciept = await buyFlat("building1","B","5000000000000000000");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  // console.log(tx)
   return (
     <div className={styles.container}>
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://thirdweb.com/">thirdweb</a>!
-        </h1>
-
-        <p className={styles.description}>
-          Get started by configuring your desired network in{" "}
-          <code className={styles.code}>pages/_app.js</code>, then modify the{" "}
-          <code className={styles.code}>pages/index.js</code> file!
-        </p>
-
-        <div className={styles.connect}>
-          <ConnectWallet />
-        </div>
-
-        <div className={styles.grid}>
-          <a href="https://portal.thirdweb.com/" className={styles.card}>
-            <h2>Portal &rarr;</h2>
-            <p>
-              Guides, references and resources that will help you build with
-              thirdweb.
-            </p>
-          </a>
-
-          <a href="https://thirdweb.com/dashboard" className={styles.card}>
-            <h2>Dashboard &rarr;</h2>
-            <p>
-              Deploy, configure and manage your smart contracts from the
-              dashboard.
-            </p>
-          </a>
-
-          <a
-            href="https://portal.thirdweb.com/templates"
-            className={styles.card}
-          >
-            <h2>Templates &rarr;</h2>
-            <p>
-              Discover and clone template projects showcasing thirdweb features.
-            </p>
-          </a>
-        </div>
-      </main>
+      <button 
+        style={{ height: "100px", width: "100px" }}
+        type="submit"
+        title="buildings"
+        onClick={connect}
+      />
+      <button
+        style={{ height: "100px" }}
+        type="submit"
+        title="buildings"
+        onClick={handleEvents}
+      />
     </div>
-  );
-}
+  )}
