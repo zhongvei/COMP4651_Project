@@ -1,7 +1,7 @@
 export default function Home() {
   return (
     <div className="bg-cover bg-no-repeat bg-background h-screen w-full">
-        <div className="fixed top-[32vh] left-[7vw]">
+        <div className="absolute top-[32vh] left-[7vw]">
             <div>
                 <p className="font-bold text-[82px] text-white">
                     Re-Thinking The

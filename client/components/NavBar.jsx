@@ -24,7 +24,7 @@ const Navbar = () => {
             label: "Rent",
         },
         SocialImpact: {
-            href: "/socialimpact",
+            href: "/social_impact",
             label: "Social Impact",
         },
     };
@@ -33,7 +33,9 @@ const Navbar = () => {
         <nav className="bg-white h-[12vh]">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                 <div className="flex items-center">
-                    <Image src="/logo.png" width={65} height={65} alt="Logo" />
+                    <a href="/">
+                        <Image src="/logo.png" width={65} height={65} alt="Logo" />
+                    </a>
                 </div>
                 <button data-collapse-toggle="navbar-default" type="button" className="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
                     <span className="sr-only">Open main menu</span>
