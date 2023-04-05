@@ -1,6 +1,6 @@
 
 import { Outfit } from 'next/font/google'
-import { Dropdown } from "@nextui-org/react"
+import { Dropdown, Table } from "@nextui-org/react"
 import Image from 'next/image'
 import { useState, useEffect } from "react"
 
@@ -16,7 +16,70 @@ export default function Details() {
         { name: "Price Tracking"},
         { name: "Transactions"},
         { name: "Occupancy"},
+    ];
+    const tableTitle = [
+        {
+          key: "date",
+          label: "Date",
+        },
+        {
+          key: "transaction",
+          label: "Transaction",
+        },
       ];
+    
+    const transactionItems = [
+        {
+            key: "1",
+            date: "2021-09-01",
+            transaction: "TX1",
+        },
+        {
+            key: "2",
+            date: "2021-09-01",
+            transaction: "TX2",
+        },
+        {
+            key: "3",
+            date: "2021-09-01",
+            transaction: "TX3",
+        },
+        {
+            key: "4",
+            date: "2021-09-01",
+            transaction: "TX4",
+        },
+        {
+            key: "5",
+            date: "2021-09-01",
+            transaction: "TX5",
+        },
+        {
+            key: "6",
+            date: "2021-09-01",
+            transaction: "TX6",
+        },
+        {
+            key: "7",
+            date: "2021-09-01",
+            transaction: "TX7",
+        },
+        {
+            key: "8",
+            date: "2021-09-01",
+            transaction: "TX8",
+        },
+        {
+            key: "9",
+            date: "2021-09-01",
+            transaction: "TX9",
+        },
+        {
+            key: "10",
+            date: "2021-09-01",
+            transaction: "TX10",
+        },
+    ]
 
     const changeContent = (c) => {
         setButtonTitle(c)
@@ -50,9 +113,9 @@ export default function Details() {
                     </div>
                 </div>
                 <div className={`col-span-7 p-20`}>
-                    <div className={`my-b-4`}>
+                    <div>
                     <Dropdown>
-                        <Dropdown.Button color={"solid"} light>
+                        <Dropdown.Button color={"solid"} light css={{borderColor:"white", border:"solid", marginBottom:"20px"}}>
                         {buttonTitle}
                         </Dropdown.Button>
                         <Dropdown.Menu
@@ -67,43 +130,27 @@ export default function Details() {
                     </Dropdown>
                     </div>
                     <div>
-                        <p className={`font-semibold`}>{content}</p>
-                        {/* <Table
-                        aria-label="Example static collection table"
+                        <Table
+                        aria-label="Example table with dynamic content"
+                        color={"solid"}
                         css={{
-                            height: "auto",
+                            height: "1rem",
                             minWidth: "100%",
                         }}
-                        selectionMode="single"
                         >
-                        <Table.Header>
-                            <Table.Column>NAME</Table.Column>
-                            <Table.Column>ROLE</Table.Column>
-                            <Table.Column>STATUS</Table.Column>
+                        <Table.Header columns={tableTitle}>
+                            {(column) => (
+                            <Table.Column key={column.key}>{column.label}</Table.Column>
+                            )}
                         </Table.Header>
-                        <Table.Body>
-                            <Table.Row key="1">
-                            <Table.Cell>Tony Reichert</Table.Cell>
-                            <Table.Cell>CEO</Table.Cell>
-                            <Table.Cell>Active</Table.Cell>
+                        <Table.Body items={transactionItems}>
+                            {(item) => (
+                            <Table.Row key={item.key}>
+                                {(columnKey) => <Table.Cell css={{color:"white"}}>{item[columnKey]}</Table.Cell>}
                             </Table.Row>
-                            <Table.Row key="2">
-                            <Table.Cell>Zoey Lang</Table.Cell>
-                            <Table.Cell>Technical Lead</Table.Cell>
-                            <Table.Cell>Paused</Table.Cell>
-                            </Table.Row>
-                            <Table.Row key="3">
-                            <Table.Cell>Jane Fisher</Table.Cell>
-                            <Table.Cell>Senior Developer</Table.Cell>
-                            <Table.Cell>Active</Table.Cell>
-                            </Table.Row>
-                            <Table.Row key="4">
-                            <Table.Cell>William Howard</Table.Cell>
-                            <Table.Cell>Community Manager</Table.Cell>
-                            <Table.Cell>Vacation</Table.Cell>
-                            </Table.Row>
+                            )}
                         </Table.Body>
-                        </Table> */}
+                        </Table>
                     </div>
                 </div>
             </div>
