@@ -1,4 +1,3 @@
-
 import { Outfit } from 'next/font/google'
 import { Dropdown, Table, useAsyncList } from "@nextui-org/react"
 import { useState, useEffect } from "react"
@@ -11,112 +10,41 @@ const outfit_font = Outfit({
 
 export default function Details() {
     const [buttonTitle, setButtonTitle] = useState("Price Tracking")
-    const { getBuildings, getTransaction } = useStateContext();
+    const { getAllBuildings, getTransaction } = useStateContext();
+    const [tableTitle, setTableTitle] = useState([]);
+    const [content, setContent] = useState([]);
+
     const buttonItems = [
         { name: "Price Tracking"},
         { name: "Transactions"},
         { name: "Occupancy"},
     ];
-    const [transaction, setTransaction] = useState([
-        {
-        buyer: '',
-        flat: '',
-        price: '',
-        timestamp: ''},
-    ]);
-      
-    const transactionTableHead = [
-        {
-          key: "buyer",
-          label: "Buyer",
-        },
-        {
-          key: "flat",
-          label: "Flat",
-        },
-        {
-            key: "price",
-            label: "Price",
-          },
-          {
-            key: "timestamp",
-            label: "Date",
-          },
-    ];
 
-    const tableTitle = [
-        {
-          key: "timestamp",
-          label: "Date",
-        },
-        {
-          key: "tx",
-          label: "Transaction",
-        },
-      ];
-    
-    const transactionItems = [
-        {
-            key: "1",
-            date: "2021-09-01",
-            transaction: "TX1",
-        },
-        {
-            key: "2",
-            date: "2021-09-01",
-            transaction: "TX2",
-        },
-        {
-            key: "3",
-            date: "2021-09-01",
-            transaction: "TX3",
-        },
-        {
-            key: "4",
-            date: "2021-09-01",
-            transaction: "TX4",
-        },
-        {
-            key: "5",
-            date: "2021-09-01",
-            transaction: "TX5",
-        },
-        {
-            key: "6",
-            date: "2021-09-01",
-            transaction: "TX6",
-        },
-        {
-            key: "7",
-            date: "2021-09-01",
-            transaction: "TX7",
-        },
-        {
-            key: "8",
-            date: "2021-09-01",
-            transaction: "TX8",
-        },
-        {
-            key: "9",
-            date: "2021-09-01",
-            transaction: "TX9",
-        },
-        {
-            key: "10",
-            date: "2021-09-01",
-            transaction: "TX10",
-        },
-    ]
-    const handleEvents = async () => {
+    const handleTransactions = async () => {
         try {
           const events = await getTransaction();
           console.log("Transaction: ", events);
           let res = [];
           for (let obj of events) {
-            res.push({timestamp: obj.timestamp.split(' ').slice(1,5).join(' '), tx: `${obj.buyer.slice(0,5) + '...' + obj.buyer.slice(-3)} pays ${obj.price} ETH for ${obj.flat}`})
+            res.push({key: obj.timestamp.split(' ').slice(1,5).join(' '), tx: `${obj.buyer.slice(0,5) + '...' + obj.buyer.slice(-3)} pays ${obj.price} ETH for ${obj.flat}`})
           }
           console.log("RES", res);
-          setTransaction(res)
+          setContent(res)
+        } catch(error) {
+          console.log(error)
+        }
+    }
+
+    const handleOccupancy = async () => {
+        try {
+          const events = await getAllBuildings();
+          console.log("Buildings: ", events);
+          let res = [];
+          for (let obj of events) {
+            res.push({key: obj.name, available: obj.available, taken: obj.taken})
+          }
+          console.log("RES", res);
+          setContent(res)
         } catch(error) {
           console.log(error)
         }
@@ -124,11 +52,34 @@ export default function Details() {
 
     const changeContent = (c) => {
         if (c === "Transactions") {
-            handleEvents();
+            handleTransactions();
+            setTableTitle([{
+                key: "key",
+                label: "Date",
+              },
+              {
+                key: "tx",
+                label: "Transaction",
+              },]);
+        } else if (c === "Occupancy") {
+            handleOccupancy();
+            setTableTitle([{
+                key: "key",
+                label: "Building",
+              },
+              {
+                key: "available",
+                label: "Available",
+              },
+              {
+                key: "taken",
+                label: "Taken",
+              },]);
         }
         setButtonTitle(c)
+
     }
-    console.log(transaction);
+
     return (
         <div>
             <div className={`w-full`} style={{backgroundColor:"white"}}>
@@ -191,10 +142,10 @@ export default function Details() {
                                 )}
                             </Table.Header>
                             <Table.Body 
-                                items={transaction}
+                                items={content}
                               >
                                 {(item) => (
-                                <Table.Row key={item.timestamp}>
+                                <Table.Row key={item.key}>
                                     {(columnKey) => <Table.Cell css={{color:"white"}}>{item[columnKey]}</Table.Cell>}
                                 </Table.Row>
                                 )}
@@ -203,12 +154,6 @@ export default function Details() {
                         )}
                         
                     </div>
-                    <button
-                        style={{width: "100px",height: "100px"}}
-                        type="submit"
-                        title="buildings"
-                        onClick={ handleEvents }
-                    />
                 </div>
             </div>
         </div>

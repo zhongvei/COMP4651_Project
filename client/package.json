@@ -11,12 +11,16 @@
     "deploy": "next build && next export && npx thirdweb@latest upload out"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.13",
+    "@heroicons/react": "^1.0.6",
     "@nextui-org/react": "^1.0.0-beta.12",
     "@thirdweb-dev/react": "^3.9.0",
     "@thirdweb-dev/sdk": "^3.9.0",
     "chart.js": "^4.2.1",
     "ethers": "^5.6.8",
+    "heroicons": "^2.0.17",
     "next": "^13.2.4",
+    "next-themes": "^0.2.1",
     "react": "^18.2",
     "react-dom": "^18.2"
   },
