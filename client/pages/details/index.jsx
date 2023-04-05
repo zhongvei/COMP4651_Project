@@ -1,8 +1,8 @@
 
 import { Outfit } from 'next/font/google'
-import { Dropdown, Table } from "@nextui-org/react"
-import Image from 'next/image'
+import { Dropdown, Table, useAsyncList } from "@nextui-org/react"
 import { useState, useEffect } from "react"
+import { useStateContext } from '../../context'
 
 const outfit_font = Outfit({
     subsets: ["latin"],
@@ -11,19 +11,46 @@ const outfit_font = Outfit({
 
 export default function Details() {
     const [buttonTitle, setButtonTitle] = useState("Price Tracking")
-    const [content, setContent] = useState("Price Tracking")
+    const { getBuildings, getTransaction } = useStateContext();
     const buttonItems = [
         { name: "Price Tracking"},
         { name: "Transactions"},
         { name: "Occupancy"},
     ];
+    const [transaction, setTransaction] = useState([
+        {
+        buyer: '',
+        flat: '',
+        price: '',
+        timestamp: ''},
+    ]);
+      
+    const transactionTableHead = [
+        {
+          key: "buyer",
+          label: "Buyer",
+        },
+        {
+          key: "flat",
+          label: "Flat",
+        },
+        {
+            key: "price",
+            label: "Price",
+          },
+          {
+            key: "timestamp",
+            label: "Date",
+          },
+    ];
+
     const tableTitle = [
         {
-          key: "date",
+          key: "timestamp",
           label: "Date",
         },
         {
-          key: "transaction",
+          key: "tx",
           label: "Transaction",
         },
       ];
@@ -80,11 +107,28 @@ export default function Details() {
             transaction: "TX10",
         },
     ]
+    const handleEvents = async () => {
+        try {
+          const events = await getTransaction();
+          console.log("Transaction: ", events);
+          let res = [];
+          for (let obj of events) {
+            res.push({timestamp: obj.timestamp.split(' ').slice(1,5).join(' '), tx: `${obj.buyer.slice(0,5) + '...' + obj.buyer.slice(-3)} pays ${obj.price} ETH for ${obj.flat}`})
+          }
+          console.log("RES", res);
+          setTransaction(res)
+        } catch(error) {
+          console.log(error)
+        }
+    }
 
     const changeContent = (c) => {
+        if (c === "Transactions") {
+            handleEvents();
+        }
         setButtonTitle(c)
-        setContent(c)
     }
+    console.log(transaction);
     return (
         <div>
             <div className={`w-full`} style={{backgroundColor:"white"}}>
@@ -130,28 +174,41 @@ export default function Details() {
                     </Dropdown>
                     </div>
                     <div>
-                        <Table
-                        aria-label="Example table with dynamic content"
-                        color={"solid"}
-                        css={{
-                            height: "1rem",
-                            minWidth: "100%",
-                        }}
-                        >
-                        <Table.Header columns={tableTitle}>
-                            {(column) => (
-                            <Table.Column key={column.key}>{column.label}</Table.Column>
-                            )}
-                        </Table.Header>
-                        <Table.Body items={transactionItems}>
-                            {(item) => (
-                            <Table.Row key={item.key}>
-                                {(columnKey) => <Table.Cell css={{color:"white"}}>{item[columnKey]}</Table.Cell>}
-                            </Table.Row>
-                            )}
-                        </Table.Body>
-                        </Table>
+                        {buttonTitle === "Price Tracking" ? (
+                            <div></div>
+                        ) : (
+                            <Table
+                            aria-label="Example table with dynamic content"
+                            color={"solid"}
+                            css={{
+                                height: "1rem",
+                                minWidth: "100%",
+                            }}
+                            >
+                            <Table.Header columns={tableTitle}>
+                                {(column) => (
+                                <Table.Column key={column.key}>{column.label}</Table.Column>
+                                )}
+                            </Table.Header>
+                            <Table.Body 
+                                items={transaction}
+                              >
+                                {(item) => (
+                                <Table.Row key={item.timestamp}>
+                                    {(columnKey) => <Table.Cell css={{color:"white"}}>{item[columnKey]}</Table.Cell>}
+                                </Table.Row>
+                                )}
+                            </Table.Body>
+                            </Table>
+                        )}
+                        
                     </div>
+                    <button
+                        style={{width: "100px",height: "100px"}}
+                        type="submit"
+                        title="buildings"
+                        onClick={ handleEvents }
+                    />
                 </div>
             </div>
         </div>

@@ -6,7 +6,7 @@ const StateContext = createContext();
 export const StateContextProvider = ({ children }) => {
 
     // TODO : add the contract address
-    const { contract } = useContract("0x2D10A3DCB8215e26d864d63E1A342F7E18209869");
+    const { contract } = useContract("0x97A63F50f2A0A6Ae87F62752f75dFfad00ab1E7c");
 
     // Address of your metamask
     const address = useAddress();
@@ -26,7 +26,7 @@ export const StateContextProvider = ({ children }) => {
             buyer: t.data.owner,
             flat: t.data[3],
             price: t.data.price.toNumber(),
-            timestamp: new Date(t.data.timestamp.toNumber())
+            timestamp: new Date(t.data.timestamp.toNumber()).toString(),
         }))
 
         return parsedTx;
