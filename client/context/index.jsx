@@ -26,7 +26,7 @@ export const StateContextProvider = ({ children }) => {
             buyer: t.data.owner,
             flat: t.data[3],
             price: t.data.price.toNumber(),
-            timestamp: new Date(t.data.timestamp.toNumber())
+            timestamp: new Date(t.data.timestamp.toNumber()).toString(),
         }))
 
         return parsedTx;
