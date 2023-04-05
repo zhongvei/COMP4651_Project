@@ -6,7 +6,7 @@ const StateContext = createContext();
 export const StateContextProvider = ({ children }) => {
 
     // TODO : add the contract address
-    const { contract } = useContract("0x2D10A3DCB8215e26d864d63E1A342F7E18209869");
+    const { contract } = useContract("");
 
     // Address of your metamask
     const address = useAddress();
@@ -15,11 +15,11 @@ export const StateContextProvider = ({ children }) => {
     const connect = useMetamask();
 
     // TODO: create buildings
-    const createBuildings = async() => {
+    const createBuildings = async () => {
         console.log("Create Buildings....");
     }
 
-    const getTransaction = async() => {
+    const getTransaction = async () => {
         const tx = await contract.events.getAllEvents();
 
         const parsedTx = tx.map((t) => ({
@@ -32,8 +32,8 @@ export const StateContextProvider = ({ children }) => {
         return parsedTx;
     }
 
-    const getBuildings = async() => {
-        const buildings = await contract.call('getBuildings');
+    const getAllBuildings = async () => {
+        const buildings = await contract.call('getAllBuildings');
 
         const parsedBuilding = buildings.map((building) => ({
             name: building.name,
@@ -44,13 +44,41 @@ export const StateContextProvider = ({ children }) => {
         return parsedBuilding;
     }
 
+    const getBuildings = async (address) => {
+        const buildings = await contract.call('getBuildings', address);
+
+        var allBuildings = [];
+
+        for (let i = 0; i < buildings.length; ++i) {
+            const building = await getFlats(buildings[i].name);
+            allBuildings.push(building);
+        }
+
+        return allBuildings.flat();
+    }
+
+    const getFlats = async (building) => {
+        const flats = await contract.call('getFlats', building);
+
+        const parsedFlats = flats.map((flat) => ({
+            building: building,
+            unit: flat.unit,
+            area: flat.area.toNumber(),
+            room: flat.room.toNumber()
+        }));
+
+        return parsedFlats;
+    }
+
     return (
         <StateContext.Provider
             value={{
                 address,
                 connect,
                 createBuildings,
+                getAllBuildings,
                 getBuildings,
+                getFlats,
                 getTransaction
             }}
         >
