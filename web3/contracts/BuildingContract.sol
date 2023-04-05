@@ -3,6 +3,7 @@ pragma solidity ^0.8.9;
 
 contract BuildingContract {
     string public name;
+    mapping(string => uint256) temp;
     mapping(uint256 => Building) buildings;
     mapping(string => Building) buildingsName;
     mapping(string => mapping(string => uint256)) mappings;
@@ -62,7 +63,7 @@ contract BuildingContract {
         string memory _name,
         string memory _homeAddress
     ) public {
-        Building storage b = buildings[numOfBuildings++];
+        Building storage b = buildings[numOfBuildings];
 
         b.owner = msg.sender;
         b.name = _name;
@@ -71,6 +72,7 @@ contract BuildingContract {
         b.available = 0;
         b.taken = 0;
 
+        temp[_name] = numOfBuildings++;
         addressToBuilding[_homeAddress][addressToCount[_homeAddress]++] = b;
         buildingsName[b.name] = b;
     }
@@ -83,7 +85,10 @@ contract BuildingContract {
         uint256 _area,
         uint256 _room
     ) public {
+        uint256 index = temp[_buildingName];
+
         Building storage b = buildingsName[_buildingName];
+        Building storage b1 = buildings[index];
 
         Flat memory flat = Flat(
             msg.sender,
@@ -94,10 +99,12 @@ contract BuildingContract {
             _room,
             true
         );
-
+        
+        b1.flats.push(flat);
         b.flats.push(flat);
 
         b.available++;
+        b1.available++;
 
         mappings[b.name][_unit] = b.numFlats++;
     }
@@ -106,7 +113,10 @@ contract BuildingContract {
         string memory building,
         string memory flat
     ) public payable notContract(msg.sender) validETH returns (bool) {
+        uint256 index = temp[building];
+
         Building storage b = buildingsName[building];
+        Building storage b1 = buildings[index];
         Flat storage f = b.flats[mappings[building][flat]];
 
         require(msg.sender.balance >= f.price, "Insufficient ETH balance.");
@@ -122,6 +132,8 @@ contract BuildingContract {
         f.vacant = false;
         --b.available;
         ++b.taken;
+        --b1.available;
+        ++b1.taken;
 
         emit Buy(msg.sender, f.price / 1 ether, block.timestamp, flat);
         return success;
