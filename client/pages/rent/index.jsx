@@ -164,7 +164,7 @@ const Rent = () => {
                                 }}
                                 defaultValue={location}>
                                 {locations.map((item) => (
-                                    <option value={item}>{item}</option>
+                                    <option key={item} value={item}>{item}</option>
                                 ))}
                             </select>
                         </div>
