@@ -1,6 +1,6 @@
 import { ThirdwebProvider } from "@thirdweb-dev/react";
-import { Navbar } from "../components";
 import { StateContextProvider } from "../context";
+import { Navbar } from "../components";
 import "../styles/globals.css";
 
 // This is the chain your dApp will work on.

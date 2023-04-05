@@ -1,8 +1,8 @@
 
 import { Outfit } from 'next/font/google'
-import { Dropdown } from "@nextui-org/react"
-import Image from 'next/image'
+import { Dropdown, Table, useAsyncList } from "@nextui-org/react"
 import { useState, useEffect } from "react"
+import { useStateContext } from '../../context'
 
 const outfit_font = Outfit({
     subsets: ["latin"],
@@ -11,17 +11,124 @@ const outfit_font = Outfit({
 
 export default function Details() {
     const [buttonTitle, setButtonTitle] = useState("Price Tracking")
-    const [content, setContent] = useState("Price Tracking")
+    const { getBuildings, getTransaction } = useStateContext();
     const buttonItems = [
         { name: "Price Tracking"},
         { name: "Transactions"},
         { name: "Occupancy"},
+    ];
+    const [transaction, setTransaction] = useState([
+        {
+        buyer: '',
+        flat: '',
+        price: '',
+        timestamp: ''},
+    ]);
+      
+    const transactionTableHead = [
+        {
+          key: "buyer",
+          label: "Buyer",
+        },
+        {
+          key: "flat",
+          label: "Flat",
+        },
+        {
+            key: "price",
+            label: "Price",
+          },
+          {
+            key: "timestamp",
+            label: "Date",
+          },
+    ];
+
+    const tableTitle = [
+        {
+          key: "timestamp",
+          label: "Date",
+        },
+        {
+          key: "tx",
+          label: "Transaction",
+        },
       ];
+    
+    const transactionItems = [
+        {
+            key: "1",
+            date: "2021-09-01",
+            transaction: "TX1",
+        },
+        {
+            key: "2",
+            date: "2021-09-01",
+            transaction: "TX2",
+        },
+        {
+            key: "3",
+            date: "2021-09-01",
+            transaction: "TX3",
+        },
+        {
+            key: "4",
+            date: "2021-09-01",
+            transaction: "TX4",
+        },
+        {
+            key: "5",
+            date: "2021-09-01",
+            transaction: "TX5",
+        },
+        {
+            key: "6",
+            date: "2021-09-01",
+            transaction: "TX6",
+        },
+        {
+            key: "7",
+            date: "2021-09-01",
+            transaction: "TX7",
+        },
+        {
+            key: "8",
+            date: "2021-09-01",
+            transaction: "TX8",
+        },
+        {
+            key: "9",
+            date: "2021-09-01",
+            transaction: "TX9",
+        },
+        {
+            key: "10",
+            date: "2021-09-01",
+            transaction: "TX10",
+        },
+    ]
+    const handleEvents = async () => {
+        try {
+          const events = await getTransaction();
+          console.log("Transaction: ", events);
+          let res = [];
+          for (let obj of events) {
+            res.push({timestamp: obj.timestamp.split(' ').slice(1,5).join(' '), tx: `${obj.buyer.slice(0,5) + '...' + obj.buyer.slice(-3)} pays ${obj.price} ETH for ${obj.flat}`})
+          }
+          console.log("RES", res);
+          setTransaction(res)
+        } catch(error) {
+          console.log(error)
+        }
+    }
 
     const changeContent = (c) => {
+        if (c === "Transactions") {
+            handleEvents();
+        }
         setButtonTitle(c)
-        setContent(c)
     }
+    console.log(transaction);
     return (
         <div>
             <div className={`w-full`} style={{backgroundColor:"white"}}>
@@ -50,9 +157,9 @@ export default function Details() {
                     </div>
                 </div>
                 <div className={`col-span-7 p-20`}>
-                    <div className={`my-b-4`}>
+                    <div>
                     <Dropdown>
-                        <Dropdown.Button color={"solid"} light>
+                        <Dropdown.Button color={"solid"} light css={{borderColor:"white", border:"solid", marginBottom:"20px"}}>
                         {buttonTitle}
                         </Dropdown.Button>
                         <Dropdown.Menu
@@ -67,44 +174,41 @@ export default function Details() {
                     </Dropdown>
                     </div>
                     <div>
-                        <p className={`font-semibold`}>{content}</p>
-                        {/* <Table
-                        aria-label="Example static collection table"
-                        css={{
-                            height: "auto",
-                            minWidth: "100%",
-                        }}
-                        selectionMode="single"
-                        >
-                        <Table.Header>
-                            <Table.Column>NAME</Table.Column>
-                            <Table.Column>ROLE</Table.Column>
-                            <Table.Column>STATUS</Table.Column>
-                        </Table.Header>
-                        <Table.Body>
-                            <Table.Row key="1">
-                            <Table.Cell>Tony Reichert</Table.Cell>
-                            <Table.Cell>CEO</Table.Cell>
-                            <Table.Cell>Active</Table.Cell>
-                            </Table.Row>
-                            <Table.Row key="2">
-                            <Table.Cell>Zoey Lang</Table.Cell>
-                            <Table.Cell>Technical Lead</Table.Cell>
-                            <Table.Cell>Paused</Table.Cell>
-                            </Table.Row>
-                            <Table.Row key="3">
-                            <Table.Cell>Jane Fisher</Table.Cell>
-                            <Table.Cell>Senior Developer</Table.Cell>
-                            <Table.Cell>Active</Table.Cell>
-                            </Table.Row>
-                            <Table.Row key="4">
-                            <Table.Cell>William Howard</Table.Cell>
-                            <Table.Cell>Community Manager</Table.Cell>
-                            <Table.Cell>Vacation</Table.Cell>
-                            </Table.Row>
-                        </Table.Body>
-                        </Table> */}
+                        {buttonTitle === "Price Tracking" ? (
+                            <div></div>
+                        ) : (
+                            <Table
+                            aria-label="Example table with dynamic content"
+                            color={"solid"}
+                            css={{
+                                height: "1rem",
+                                minWidth: "100%",
+                            }}
+                            >
+                            <Table.Header columns={tableTitle}>
+                                {(column) => (
+                                <Table.Column key={column.key}>{column.label}</Table.Column>
+                                )}
+                            </Table.Header>
+                            <Table.Body 
+                                items={transaction}
+                              >
+                                {(item) => (
+                                <Table.Row key={item.timestamp}>
+                                    {(columnKey) => <Table.Cell css={{color:"white"}}>{item[columnKey]}</Table.Cell>}
+                                </Table.Row>
+                                )}
+                            </Table.Body>
+                            </Table>
+                        )}
+                        
                     </div>
+                    <button
+                        style={{width: "100px",height: "100px"}}
+                        type="submit"
+                        title="buildings"
+                        onClick={ handleEvents }
+                    />
                 </div>
             </div>
         </div>
