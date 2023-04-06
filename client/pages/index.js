@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { ConnectWallet } from "@thirdweb-dev/react";
 import styles from "../styles/Home.module.css";
 import { useStateContext } from "../context";
 import Landing from "../components/Landing";
@@ -12,89 +11,103 @@ import Footer from "../components/footer";
 import PopupWidget from "../components/popupWidget";
 
 export default function Home() {
+	const { getBuildings, getTransaction, getFlats, buyFlat, connect, generate } =
+		useStateContext();
 
-  const { getBuildings, getTransaction, getFlats, buyFlat, connect } = useStateContext();
+	const [test, settest] = useState({
+		name: "",
+		available: "",
+		taken: "",
+	});
 
-  const [test, settest] = useState({
-    name: '',
-    available: '',
-    taken: ''
-  })
+	const [tx, settx] = useState({
+		buyer: "",
+		flat: "",
+		price: "",
+	});
 
-  const [tx, settx] = useState({
-    buyer: '',
-    flat: '',
-    price: ''
-  });
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		try {
+			console.log("clicked");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      console.log("clicked")
+			const data = await getBuildings();
+			settest(data);
+			// console.log(`${test.name} ${test.available} ${test.taken}`);
+			// console.log(data.available.toNumber());
+		} catch (error) {
+			console.log(`error ${error}`);
+		}
+	};
 
-      const data = await getBuildings();
-      settest(data);
-      // console.log(`${test.name} ${test.available} ${test.taken}`);
-      // console.log(data.available.toNumber());
-    } catch (error) {
-      console.log(`error ${error}`);
-    }
-  }
+	const handleEvents = async (e) => {
+		e.preventDefault();
+		try {
+			const events = await getTransaction();
+			console.log(events);
+			settx(events);
+			// console.log(tx[0])
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
-  const handleEvents = async (e) => {
-    e.preventDefault();
-    try {
-      const events = await getTransaction();
-      console.log(events)
-      settx(events)
-      // console.log(tx[0])
-    } catch (error) {
-      console.log(error)
-    }
-  }
+	const handleFlats = async (e) => {
+		e.preventDefault();
+		try {
+			const events = await getFlats("building1");
+			console.log(events);
+			// settx(events)
+			// console.log(tx[0])
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
-  const handleFlats = async (e) => {
-    e.preventDefault();
-    try {
-      const events = await getFlats("building1");
-      console.log(events);
-      // settx(events)
-      // console.log(tx[0])
-    } catch (error) {
-      console.log(error)
-    }
-  }
+	const handleBuyFlat = async (e) => {
+		e.preventDefault();
+		try {
+			const reciept = await buyFlat("building1", "B", "5000000000000000000");
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
-  const handleBuyFlat = async(e) => {
-    e.preventDefault();
-    try {
-      const reciept = await buyFlat("building1","B","5000000000000000000");
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  // console.log(tx)
-  return (
-    <>
-    <Landing/>
+	const handleGenerate = async (e) => {
+		e.preventDefault();
+		console.log("clicked");
+		try {
+			await generate();
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
-      <Benefits data={benefitOne} />
+	return (
+		<>
+			<Landing />
 
-      <SectionTitle
-        pretitle="Watch a video"
-        title="Learn how to fullfil your needs">
-        This section is to highlight a promo or demo video of your product.
-        Analysts says a landing page with video has 3% more conversion rate. So,
-        don't forget to add one. Just like this.
-      </SectionTitle>
-      <Video />
-      
-      <SectionTitle pretitle="FAQ" title="Frequently Asked Questions">
-        Answer your customers possible questions here, it will increase the
-        conversion rate as well as support or chat requests.
-      </SectionTitle>
-      <Faq />
-      <Footer />
-      <PopupWidget />
-    </>
-  )}
+			<Benefits data={benefitOne} />
+
+			<SectionTitle
+				pretitle="Watch a video"
+				title="Learn how to fullfil your needs"
+			>
+				This section is to highlight a promo or demo video of your product.
+				Analysts says a landing page with video has 3% more conversion rate. So,
+				don't forget to add one. Just like this.
+			</SectionTitle>
+			<Video />
+			<button onClick={handleGenerate} type="submit">
+				Get Building
+			</button>
+			<SectionTitle pretitle="FAQ" title="Frequently Asked Questions">
+				Answer your customers possible questions here, it will increase the
+				conversion rate as well as support or chat requests.
+			</SectionTitle>
+			<Faq />
+			<Footer />
+			<PopupWidget />
+		</>
+	);
+}

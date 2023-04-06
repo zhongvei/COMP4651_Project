@@ -1,12 +1,13 @@
 import React, { createContext, useContext } from 'react'
 import { useAddress, useContract, useMetamask } from '@thirdweb-dev/react'
+import { ethers } from 'ethers';
 
 const StateContext = createContext();
 
 export const StateContextProvider = ({ children }) => {
 
     // TODO : add the contract address
-    const { contract } = useContract("0x37Df6E436a7B4fCB23ECfef6Dfc21Eb6bB8Ef7A3");
+    const { contract } = useContract("0xD3aA556287Afe63102e5797BFDDd2A1E8DbB3eA5");
 
     // Address of your metamask
     const address = useAddress();
@@ -47,6 +48,7 @@ export const StateContextProvider = ({ children }) => {
 
         const parsedBuilding = buildings.map((building) => ({
             name: building.name,
+            address:  building.homeAddress,
             available: building.available.toNumber(),
             taken: building.taken.toNumber()
         }));
@@ -54,7 +56,7 @@ export const StateContextProvider = ({ children }) => {
         return parsedBuilding;
     }
 
-    const getBuildings = async (address) => {
+    const getFlatByAddress = async (address) => {
         const buildings = await contract.call('getBuildings', address);
 
         var allBuildings = [];
@@ -74,7 +76,8 @@ export const StateContextProvider = ({ children }) => {
             building: building,
             unit: flat.unit,
             area: flat.area.toNumber(),
-            room: flat.room.toNumber()
+            room: flat.room.toNumber(),
+            price: ethers.utils.formatEther(flat.price.toString())
         }));
 
         return parsedFlats;
@@ -90,7 +93,7 @@ export const StateContextProvider = ({ children }) => {
                 address,
                 connect,
                 getAllBuildings,
-                getBuildings,
+                getFlatByAddress,
                 getFlats,
                 getTransaction,
                 buyFlat,
