@@ -16,7 +16,19 @@
 
 ## Introduction
 
-This is a project for HackUST 2023. The project is a web application that allows users to connect to a local blockchain network and interact with it. The web application is built using Next.js and React.js. The blockchain network is built using solidity and hardhat. Future plans to push the project's frontend to the vercel platform and the blockchain to the Polygon (Mumbai Testnet) blockchain.
+ The following project is a submission for HackUST 2023. 
+
+#### Homeābode leverages both finance and Web3 technologies to create a community-driven platform for affordable housing. It consists of two main components:
+
+#### a) A REIT fund that manages and rents out housing for low-to-middle income HK residents at slightly below market price 
+
+#### b) A platform powered by smart-contracts and blockchain monitoring framework that increases the transparency of the fund’s assets and social impact.
+
+The codebase for the project is split into two parts: the blockchain network and the web application. 
+
+The blockchain network is built using solidity and local ganache server. 
+
+The web application is built using Next.js. 
 
 <hr/>
 
