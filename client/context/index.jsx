@@ -1,12 +1,25 @@
 import React, { createContext, useContext } from 'react'
 import { useAddress, useContract, useMetamask } from '@thirdweb-dev/react'
+import { ethers } from 'ethers';
 
 const StateContext = createContext();
+
+const regions = ["Causeway Bay", "Wan Chai", "Tsim Sha Tsui", "Sai Kung", "Central"]
+const buildings = [
+    ["The Hayworth", "Park Haven", "Vienna Mansion"],
+    ["Suncrest Tower", "Starlight Garden", "Rialto Building"],
+    ["The Masterpiece", "Harbour Pinnacle", "The Austin Block"],
+    ["The Giverny", "Muk Min Shan", "Villa Royale"],
+    ["Glenealy Building", "The Gage", "Kingearn Building"]
+]
+const flats = ["A", "B", "C"];
+
+const numFlats = 3;
 
 export const StateContextProvider = ({ children }) => {
 
     // TODO : add the contract address
-    const { contract } = useContract("");
+    const { contract } = useContract("0x09376D8cc2d538b3e653C8574923a8409805f3d1");
 
     // Address of your metamask
     const address = useAddress();
@@ -16,17 +29,17 @@ export const StateContextProvider = ({ children }) => {
 
     // Auto generate blockchain
     const generate = async () => {
-        await contract.call('createBuilding', "building1", "address1");
-        await contract.call('createBuilding', "building2", "address1");
-        await contract.call('createBuilding', "building3", "address2");
+        for (let i = 0; i < regions.length; ++i) {
+            for (let j = 0; j < buildings[i].length; ++j) {
+                const region = regions[i];
+                const building = buildings[i][j];
 
-        await contract.call('createFlat', "building1", "A", "10000000000000000000", 10, 10, 10);
-        await contract.call('createFlat', "building1", "B", "5000000000000000000", 10, 10, 10);
-        await contract.call('createFlat', "building2", "C", "10000000000000000000", 10, 10, 10);
-        await contract.call('createFlat', "building2", "D", "5000000000000000000", 10, 10, 10);
-        await contract.call('createFlat', "building3", "E", "10000000000000000000", 10, 10, 10);
-        await contract.call('createFlat', "building3", "F", "5000000000000000000", 10, 10, 10);
-
+                await contract.call('createBuilding', region, building);
+                for (let k = 0; k < numFlats; ++k) {
+                    await contract.call('createFlat', building, flats[k], ethers.utils.parseUnits((Math.random() * 10 + 1).toString(), "ether"), 10, 10, 10);
+                }
+            }
+        }
     }
 
     const getTransaction = async () => {
@@ -47,6 +60,7 @@ export const StateContextProvider = ({ children }) => {
 
         const parsedBuilding = buildings.map((building) => ({
             name: building.name,
+            address: building.homeAddress,
             available: building.available.toNumber(),
             taken: building.taken.toNumber()
         }));
@@ -54,7 +68,7 @@ export const StateContextProvider = ({ children }) => {
         return parsedBuilding;
     }
 
-    const getBuildings = async (address) => {
+    const getFlatByAddress = async (address) => {
         const buildings = await contract.call('getBuildings', address);
 
         var allBuildings = [];
@@ -74,7 +88,8 @@ export const StateContextProvider = ({ children }) => {
             building: building,
             unit: flat.unit,
             area: flat.area.toNumber(),
-            room: flat.room.toNumber()
+            room: flat.room.toNumber(),
+            price: ethers.utils.formatEther(flat.price.toString())
         }));
 
         return parsedFlats;
@@ -90,7 +105,7 @@ export const StateContextProvider = ({ children }) => {
                 address,
                 connect,
                 getAllBuildings,
-                getBuildings,
+                getFlatByAddress,
                 getFlats,
                 getTransaction,
                 buyFlat,
