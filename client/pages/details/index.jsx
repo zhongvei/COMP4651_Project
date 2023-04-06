@@ -157,7 +157,6 @@ export default function Details() {
                     <div>
                         {buttonTitle === "Price Tracking" ? (
                             <div>
-                            <h1>ADFGHJKl</h1>
                             <Line data={data} options={options} />
                             </div>
                         ) : (

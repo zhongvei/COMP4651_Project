@@ -1,6 +1,6 @@
 import React from "react";
 
-const socialImpact = () => {
+const AboutPage = () => {
     return (
         <div>
             <h1>About</h1>
@@ -8,4 +8,4 @@ const socialImpact = () => {
     )
 }
 
-export default socialImpact;
+export default AboutPage;
