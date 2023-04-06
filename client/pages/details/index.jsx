@@ -21,7 +21,6 @@ export default function Details() {
 
     const router = useRouter();
 
-
     const data = {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
         datasets: [

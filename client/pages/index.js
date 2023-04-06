@@ -91,6 +91,7 @@ export default function Home() {
         pretitle="Watch a video"
         title="Learn How Our Platform Works">
       </SectionTitle>
+	  <Benefits data={benefitOne} />
       <Video />
       
       <SectionTitle pretitle="FAQ" title="Frequently Asked Questions">
