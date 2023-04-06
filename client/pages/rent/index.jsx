@@ -1,79 +1,78 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useStateContext } from "../../context";
-import { Table } from '@nextui-org/react';
 
 const Rent = () => {
+
     const locations = [
-        "Hong Kong",
+        "Hong Kong Island",
         "Kowloon",
         "New Territories",
-        "Outlying Islands",
-        "All",
     ];
 
+    const { getAllBuildings, getFlatByAddress } = useStateContext();
     const [location, setLocation] = React.useState("Hong Kong");
     const [modal, setModal] = React.useState(true);
+    const [buildingAddress, setBuildingAddress] = React.useState("");
+    const [flats, setFlats] = React.useState([]);
+    const [selectedFlat, setSelectedFlat] = React.useState(null);
+
+    const getBuildings = async () => {
+        console.log("getBuildings");
+        const buildings = await getAllBuildings();
+        var buildingAddress = [];
+        buildings.map((building) => {
+            if (!buildingAddress.includes(building.address)) {
+                buildingAddress.push(building.address);
+            }
+        });
+        setBuildingAddress(buildingAddress);
+        return buildingAddress;
+    };
+
+    const getFlats = async (buildingAddress) => {
+        console.log("getFlats");
+        const flats = await getFlatByAddress(buildingAddress);
+        flats.map((flat) => {
+            console.log(flat);
+            setFlats((prev) => [...prev, flat])
+        });
+    };
+
+    const initData = () => {
+        console.log("initData");
+        getBuildings()
+        .then((buildingAddress) => {
+            for (let i = 0; i < buildingAddress.length; ++i) {
+                console.log("buildingAddress[i]", buildingAddress[i]);
+                getFlats(buildingAddress[i]);
+            }
+            console.log("flats", flats);
+        }).catch((err) => {
+            console.log(err);
+        });
+    };
+
+    const randomSelection = () => {
+        console.log("randomSelection");
+        const randomIndex = Math.floor(Math.random() * flats.length);
+        setSelectedFlat(flats[randomIndex]);
+    };
+
+    useEffect(() => {
+        randomSelection();
+    }, [flats]);
 
 
-    const data = [
-        {
-            id: 1,
-            building: "Chinese Mansion",
-            unit: "3B",
-            area: "50 sq ft",
-            room: "1",
-        },
-        {
-            id: 1,
-            building: "Chinese Mansion",
-            unit: "3B",
-            area: "50 sq ft",
-            room: "1",
-        },
-        {
-            id: 1,
-            building: "Chinese Mansion",
-            unit: "3B",
-            area: "50 sq ft",
-            room: "1",
-        },
-        {
-            id: 1,
-            building: "Chinese Mansion",
-            unit: "3B",
-            area: "50 sq ft",
-            room: "1",
-        },
-        {
-            id: 1,
-            building: "Chinese Mansion",
-            unit: "3B",
-            area: "50 sq ft",
-            room: "1",
-        },
-        {
-            id: 1,
-            building: "Chinese Mansion",
-            unit: "3B",
-            area: "50 sq ft",
-            room: "1",
-        },
-        {
-            id: 1,
-            building: "Chinese Mansion",
-            unit: "3B",
-            area: "50 sq ft",
-            room: "1",
-        },
-        {
-            id: 1,
-            building: "Chinese Mansion",
-            unit: "3B",
-            area: "50 sq ft",
-            room: "1",
-        },
 
-    ]
+    // if (loading) {
+    //     return (
+    //         <div className="w-full h-[88vh] flex items-center justify-center">
+    //             <div className="items-center justify-center rounded-full w-14 h-14 bg-gradient-to-tr from-indigo-500 to-pink-500 animate-spin">
+    //                 <div className="h-9 w-9 rounded-full bg-gray-200"></div>
+    //             </div>
+    //         </div>
+    //     )
+    // }
 
     return (
         <div className="w-full flex lg:flex-row">
@@ -82,7 +81,7 @@ const Rent = () => {
                     <div className="w-[55%] h-[500px] bg-white flex items-center justify-center  ">
                         <div className="px-16">
                             <div>
-                                <button className="float-right" onClick={() => {
+                                <button className="float-right bg-black" onClick={() => {
                                     setModal(false);
                                 }}>
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -111,6 +110,7 @@ const Rent = () => {
                                 <div className="flex flex-row justify-between items-center">
                                     <button className="bg-blue-700 w-24 p-2" onClick={() => {
                                         setModal(false);
+                                        initData();
                                     }}>
                                         Search!
                                     </button>
@@ -142,7 +142,7 @@ const Rent = () => {
                             <div className="flex flex-row justify-between items-center">
                                 <div className="flex flex-row items-center justify-center">
                                     <p className="font-bold text-3xl">
-                                        $12,000
+                                        {selectedFlat?.price} ETH
                                     </p>
                                     <p className="text-3xl">
                                         / month
@@ -179,8 +179,11 @@ const Rent = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="overflow-y-scroll">
-                                    {data.map((item) => (
-                                        <tr key={item} className="bg-[#0F0F0F] border-b dark:bg-gray-800 dark:border-gray-700 text-white">
+                                    {flats.map((item, index) => (
+                                        <tr key={index} className={
+                                            item == selectedFlat ? "bg-[#2402F5] border-b text-white hover:cursor-pointer" :
+                                                "bg-[#0F0F0F] border-b text-white hover:cursor-pointer"
+                                        } onClick={() => { setSelectedFlat(item); }}>
                                             <td className="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-white">{item.building}</td>
                                             <td className="px-6 py-4">{item.unit}</td>
                                             <td className="px-6 py-4">{item.area}</td>
