@@ -23,9 +23,9 @@ const Navbar = () => {
             href: "/rent",
             label: "Rent",
         },
-        SocialImpact: {
-            href: "/social_impact",
-            label: "Social Impact",
+        About: {
+            href: "/about",
+            label: "About",
         },
     };
 

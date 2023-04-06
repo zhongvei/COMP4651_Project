@@ -13,7 +13,7 @@ import PopupWidget from "../components/popupWidget";
 
 export default function Home() {
 
-  const { getBuildings, getTransaction, getFlats, buyFlat, connect } = useStateContext();
+  const { getBuildings, getTransaction, getFlats, buyFlat, connect, generate } = useStateContext();
 
   const [test, settest] = useState({
     name: '',
@@ -73,19 +73,29 @@ export default function Home() {
       console.log(error);
     }
   }
+
+  const handleGenerate = async() => {
+    try {
+      await generate();
+    } catch (error) {
+      console.log(error);
+    }
+  }
   // console.log(tx)
   return (
     <>
     <Landing/>
+    <button 
+        type="submit"
+        onClick={handleGenerate}
+        style={{backgroundColor: "blue", color: "white", padding: "10px", borderRadius: "5px", border: "none", cursor: "pointer", width: "100px", margin: "10px"}}
+    />
 
       <Benefits data={benefitOne} />
 
       <SectionTitle
         pretitle="Watch a video"
-        title="Learn how to fullfil your needs">
-        This section is to highlight a promo or demo video of your product.
-        Analysts says a landing page with video has 3% more conversion rate. So,
-        don't forget to add one. Just like this.
+        title="Learn How Our Platform Works">
       </SectionTitle>
       <Video />
       
