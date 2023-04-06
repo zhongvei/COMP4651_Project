@@ -128,10 +128,10 @@ export default function Details() {
                         <p className={`mb-1`}><strong># of Investors:</strong> 10,835</p>
                         <p className={`mb-1`}><strong>Monthly Dividend (per share):</strong> $55.38</p>
                         <div className={`py-8`}>
-                            <button class="w-24 bg-blue-500 hover:bg-blue-800 border border-transparent text-white font-bold py-2 px-4 rounded mr-8" onClick={(e) => router.push("/rent")}>
+                            <button className="w-24 bg-blue-500 hover:bg-blue-800 border border-transparent text-white font-bold py-2 px-4 rounded mr-8" onClick={(e) => router.push("/rent")}>
                                 Rent
                             </button>
-                            <button class="w-24 bg-transparent hover:bg-blue-500 text-white-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" onClick={(e) => router.push("/invest")}>
+                            <button className="w-24 bg-transparent hover:bg-blue-500 text-white-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" onClick={(e) => router.push("/invest")}>
                                 Invest
                             </button>
                         </div>

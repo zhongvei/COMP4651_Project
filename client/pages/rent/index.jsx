@@ -9,65 +9,70 @@ const Rent = () => {
         "New Territories",
     ];
 
-    const {address, getAllBuildings, getFlatByAddress } = useStateContext();
-    const [loading, setLoading] = React.useState(true);
+    const { getAllBuildings, getFlatByAddress } = useStateContext();
     const [location, setLocation] = React.useState("Hong Kong");
     const [modal, setModal] = React.useState(true);
     const [buildingAddress, setBuildingAddress] = React.useState("");
     const [flats, setFlats] = React.useState([]);
     const [selectedFlat, setSelectedFlat] = React.useState(null);
 
+    const getBuildings = async () => {
+        console.log("getBuildings");
+        const buildings = await getAllBuildings();
+        var buildingAddress = [];
+        buildings.map((building) => {
+            if (!buildingAddress.includes(building.address)) {
+                buildingAddress.push(building.address);
+            }
+        });
+        setBuildingAddress(buildingAddress);
+        return buildingAddress;
+    };
+
+    const getFlats = async (buildingAddress) => {
+        console.log("getFlats");
+        const flats = await getFlatByAddress(buildingAddress);
+        flats.map((flat) => {
+            console.log(flat);
+            setFlats((prev) => [...prev, flat])
+        });
+    };
+
+    const initData = () => {
+        console.log("initData");
+        getBuildings()
+        .then((buildingAddress) => {
+            for (let i = 0; i < buildingAddress.length; ++i) {
+                console.log("buildingAddress[i]", buildingAddress[i]);
+                getFlats(buildingAddress[i]);
+            }
+            console.log("flats", flats);
+        }).catch((err) => {
+            console.log(err);
+        });
+    };
+
+    const randomSelection = () => {
+        console.log("randomSelection");
+        const randomIndex = Math.floor(Math.random() * flats.length);
+        setSelectedFlat(flats[randomIndex]);
+    };
+
     useEffect(() => {
-        
-        if (!address) { 
-            console.log("no address"); 
-            return; 
-        }
-
-        if (address) {
-            const getBuildings = async () => {
-                const buildings = await getAllBuildings();
-                buildings.map((building) => {
-                    console.log(building.address);
-                    setBuildingAddress((prev) => {
-                        if (prev.includes(building.address)) {
-                            return prev;
-                        } else {
-                            return [...prev, building.address];
-                        }
-                    });
-                });
-            };
-
-            const getFlats = async (buildingAddress) => {
-                const flats = await getFlatByAddress(buildingAddress);
-                flats.map((flat) => {
-                    setFlats((prev) => [...prev, flat])
-                });
-            };                    
-            getBuildings()
-            .then(() => {
-                for (let i = 0; i < buildingAddress.length; ++i) {
-                    getFlats(buildingAddress[i]);
-                }
-            }).then(() => {
-                setSelectedFlat(flats[0]);
-                setLoading(false);
-            });
-
-        }
-    }, []);
+        randomSelection();
+    }, [flats]);
 
 
-    if (loading) {
-        return (
-            <div className="w-full h-[88vh] flex items-center justify-center">
-                <div className="items-center justify-center rounded-full w-14 h-14 bg-gradient-to-tr from-indigo-500 to-pink-500 animate-spin">
-                    <div className="h-9 w-9 rounded-full bg-gray-200"></div>
-                </div>
-            </div>
-        )
-    }
+
+    // if (loading) {
+    //     return (
+    //         <div className="w-full h-[88vh] flex items-center justify-center">
+    //             <div className="items-center justify-center rounded-full w-14 h-14 bg-gradient-to-tr from-indigo-500 to-pink-500 animate-spin">
+    //                 <div className="h-9 w-9 rounded-full bg-gray-200"></div>
+    //             </div>
+    //         </div>
+    //     )
+    // }
 
     return (
         <div className="w-full flex lg:flex-row">
@@ -105,6 +110,7 @@ const Rent = () => {
                                 <div className="flex flex-row justify-between items-center">
                                     <button className="bg-blue-700 w-24 p-2" onClick={() => {
                                         setModal(false);
+                                        initData();
                                     }}>
                                         Search!
                                     </button>
@@ -173,8 +179,8 @@ const Rent = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="overflow-y-scroll">
-                                    {flats.map((item) => (
-                                        <tr key={item.id} className={
+                                    {flats.map((item, index) => (
+                                        <tr key={index} className={
                                             item == selectedFlat ? "bg-[#2402F5] border-b text-white hover:cursor-pointer" :
                                                 "bg-[#0F0F0F] border-b text-white hover:cursor-pointer"
                                         } onClick={() => { setSelectedFlat(item); }}>
