@@ -7,7 +7,7 @@ const StateContext = createContext();
 export const StateContextProvider = ({ children }) => {
 
     // TODO : add the contract address
-    const { contract } = useContract("0xA06855D76159DE3f7a321b17020e5aCB5EC4e228");
+    const { contract } = useContract("0x37Df6E436a7B4fCB23ECfef6Dfc21Eb6bB8Ef7A3");
 
     // Address of your metamask
     const address = useAddress();

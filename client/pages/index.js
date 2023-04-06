@@ -2,6 +2,14 @@ import { useState } from "react";
 import { ConnectWallet } from "@thirdweb-dev/react";
 import styles from "../styles/Home.module.css";
 import { useStateContext } from "../context";
+import Landing from "../components/Landing";
+import SectionTitle from "../components/sectionTitle";
+import Benefits from "../components/benefits";
+import { benefitOne } from "../components/data";
+import Video from "../components/video";
+import Faq from "../components/faq";
+import Footer from "../components/footer";
+import PopupWidget from "../components/popupWidget";
 
 export default function Home() {
 
@@ -67,22 +75,26 @@ export default function Home() {
   }
   // console.log(tx)
   return (
-    <div className="bg-cover bg-no-repeat bg-background h-screen w-full">
-        <div className="absolute top-[32vh] left-[7vw]">
-            <div>
-                <p className="font-bold text-[82px] text-white">
-                    Re-Thinking The
-                </p>
-                <p className="font-bold text-[82px] text-white">
-                    Housing Crisis
-                </p>
-            </div>
-            <div>
-            <p className="text-[28px] text-white">
-                Building a better Hong Kong, one home at a time
-            </p>
-            </div>
+    <>
+    <Landing/>
 
-        </div>
-    </div>
+      <Benefits data={benefitOne} />
+
+      <SectionTitle
+        pretitle="Watch a video"
+        title="Learn how to fullfil your needs">
+        This section is to highlight a promo or demo video of your product.
+        Analysts says a landing page with video has 3% more conversion rate. So,
+        don't forget to add one. Just like this.
+      </SectionTitle>
+      <Video />
+      
+      <SectionTitle pretitle="FAQ" title="Frequently Asked Questions">
+        Answer your customers possible questions here, it will increase the
+        conversion rate as well as support or chat requests.
+      </SectionTitle>
+      <Faq />
+      <Footer />
+      <PopupWidget />
+    </>
   )}
