@@ -16,6 +16,7 @@ deployArgs.json
 
 #Nextjs
 .next
+.DS_Store
 
 # Logs
 logs
