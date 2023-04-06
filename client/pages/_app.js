@@ -2,6 +2,26 @@ import { ThirdwebProvider } from "@thirdweb-dev/react";
 import { StateContextProvider } from "../context";
 import { Navbar } from "../components";
 import "../styles/globals.css";
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+  } from 'chart.js';
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+);
 
 // This is the chain your dApp will work on.
 // Change this to the chain your app is built for.

@@ -1,13 +1,17 @@
 import { Outfit } from 'next/font/google'
-import { Dropdown, Table, useAsyncList } from "@nextui-org/react"
+import { Dropdown, Table } from "@nextui-org/react"
 import { useState, useEffect } from "react"
 import { useStateContext } from '../../context'
 import { useRouter } from 'next/router'
+import { Line } from 'react-chartjs-2';
+
 
 const outfit_font = Outfit({
     subsets: ["latin"],
     variable: "--font-outfit"
 })
+
+
 
 export default function Details() {
     const [buttonTitle, setButtonTitle] = useState("Price Tracking")
@@ -16,6 +20,29 @@ export default function Details() {
     const [content, setContent] = useState([]);
 
     const router = useRouter();
+
+
+    const data = {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [
+            {
+                label: 'Price',
+                data: [65, 59, 80, 81, 56, 55],
+                fill: false,
+                backgroundColor: 'rgb(255, 255, 255, 1.2)',
+                borderColor: 'rgba(255, 255, 255, 0.5)',
+            },
+        ],
+    };
+
+    const options = {
+        scales: {
+            y: {
+                beginAtZero: true,
+            },
+        },
+    };
+
 
     const buttonItems = [
         { name: "Price Tracking"},
@@ -129,7 +156,10 @@ export default function Details() {
                     </div>
                     <div>
                         {buttonTitle === "Price Tracking" ? (
-                            <div></div>
+                            <div>
+                            <h1>ADFGHJKl</h1>
+                            <Line data={data} options={options} />
+                            </div>
                         ) : (
                             <Table
                             aria-label="Example table with dynamic content"

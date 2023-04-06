@@ -87,27 +87,18 @@ export default function Home() {
 		<>
 			<Landing />
 
-			<Benefits data={benefitOne} />
-
-			<SectionTitle
-				pretitle="Watch a video"
-				title="Learn how to fullfil your needs"
-			>
-				This section is to highlight a promo or demo video of your product.
-				Analysts says a landing page with video has 3% more conversion rate. So,
-				don't forget to add one. Just like this.
-			</SectionTitle>
-			<Video />
-			<button onClick={handleGenerate} type="submit">
-				Get Building
-			</button>
-			<SectionTitle pretitle="FAQ" title="Frequently Asked Questions">
-				Answer your customers possible questions here, it will increase the
-				conversion rate as well as support or chat requests.
-			</SectionTitle>
-			<Faq />
-			<Footer />
-			<PopupWidget />
-		</>
-	);
-}
+      <SectionTitle
+        pretitle="Watch a video"
+        title="Learn How Our Platform Works">
+      </SectionTitle>
+      <Video />
+      
+      <SectionTitle pretitle="FAQ" title="Frequently Asked Questions">
+        Answer your customers possible questions here, it will increase the
+        conversion rate as well as support or chat requests.
+      </SectionTitle>
+      <Faq />
+      <Footer />
+      <PopupWidget />
+    </>
+  )}
