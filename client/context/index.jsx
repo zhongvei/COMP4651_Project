@@ -1,6 +1,5 @@
 import React, { createContext, useContext } from 'react'
 import { useAddress, useContract, useMetamask } from '@thirdweb-dev/react'
-import { ethers } from 'ethers';
 
 const StateContext = createContext();
 
@@ -15,9 +14,19 @@ export const StateContextProvider = ({ children }) => {
     // Connect to metamask function
     const connect = useMetamask();
 
-    // TODO: create buildings
-    const createBuildings = async () => {
-        console.log("Create Buildings....");
+    // Auto generate blockchain
+    const generate = async () => {
+        await contract.call('createBuilding', "building1", "address1");
+        await contract.call('createBuilding', "building2", "address1");
+        await contract.call('createBuilding', "building3", "address2");
+
+        await contract.call('createFlat', "building1", "A", "10000000000000000000", 10, 10, 10);
+        await contract.call('createFlat', "building1", "B", "5000000000000000000", 10, 10, 10);
+        await contract.call('createFlat', "building2", "C", "10000000000000000000", 10, 10, 10);
+        await contract.call('createFlat', "building2", "D", "5000000000000000000", 10, 10, 10);
+        await contract.call('createFlat', "building3", "E", "10000000000000000000", 10, 10, 10);
+        await contract.call('createFlat', "building3", "F", "5000000000000000000", 10, 10, 10);
+
     }
 
     const getTransaction = async () => {
@@ -80,12 +89,12 @@ export const StateContextProvider = ({ children }) => {
             value={{
                 address,
                 connect,
-                createBuildings,
                 getAllBuildings,
                 getBuildings,
                 getFlats,
                 getTransaction,
-                buyFlat
+                buyFlat,
+                generate
             }}
         >
             {children}
