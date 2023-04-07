@@ -19,7 +19,7 @@ const numFlats = 3;
 export const StateContextProvider = ({ children }) => {
 
     // TODO : add the contract address
-    const { contract } = useContract("0x09376D8cc2d538b3e653C8574923a8409805f3d1");
+    const { contract } = useContract("");
 
     // Address of your metamask
     const address = useAddress();
@@ -34,7 +34,7 @@ export const StateContextProvider = ({ children }) => {
                 const region = regions[i];
                 const building = buildings[i][j];
 
-                await contract.call('createBuilding', region, building);
+                await contract.call('createBuilding', building, region);
                 for (let k = 0; k < numFlats; ++k) {
                     await contract.call('createFlat', building, flats[k], ethers.utils.parseUnits((Math.random() * 10 + 1).toString(), "ether"), 10, 10, 10);
                 }
