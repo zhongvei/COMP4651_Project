@@ -29,7 +29,7 @@ export const StateContextProvider = ({ children }) => {
 
     // Auto generate blockchain
     const generate = async () => {
-        for (let i = 0; i < regions.length; ++i) {
+        for (let i = 0; i < 2; ++i) {
             for (let j = 0; j < buildings[i].length; ++j) {
                 const region = regions[i];
                 const building = buildings[i][j];

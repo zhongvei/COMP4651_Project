@@ -114,7 +114,7 @@ const Rent = () => {
                                         setModal(false);
                                         initData();
                                     }}>
-                                        Search!
+                                        Submit
                                     </button>
                                 </div>
                             </div>

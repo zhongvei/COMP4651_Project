@@ -31,8 +31,8 @@ export default function Home() {
 		try {
 			console.log("clicked");
 
-			const data = await getBuildings();
-			settest(data);
+			await generate();
+			// settest(data);
 			// console.log(`${test.name} ${test.available} ${test.taken}`);
 			// console.log(data.available.toNumber());
 		} catch (error) {
@@ -86,6 +86,12 @@ export default function Home() {
 	return (
 		<>
 			<Landing />
+			{/* <button 
+				onClick={handleSubmit}
+				className={`w-10 h-10`}
+				style={{backgroundColor:'red'}}
+			/> */}
+
 
 	  <Benefits data={benefitOne} />
 	  <SectionTitle

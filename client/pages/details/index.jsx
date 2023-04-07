@@ -80,6 +80,7 @@ export default function Details() {
     }
 
     const changeContent = (c) => {
+        setContent([])
         if (c === "Transactions") {
             handleTransactions();
             setTableTitle([{

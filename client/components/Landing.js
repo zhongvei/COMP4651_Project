@@ -19,7 +19,7 @@ export default function Landing() {
               <a
                 href="/details"
                 className="px-8 py-4 text-lg font-medium text-center text-white bg-indigo-600 rounded-md ">
-                Take a tour
+                Explore
               </a>
               {/* <a
                 href="https://github.com/web3templates/nextly-template/"
