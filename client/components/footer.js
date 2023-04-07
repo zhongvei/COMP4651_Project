@@ -29,7 +29,7 @@ export default function Footer() {
                       className="w-8"
                     />
                   </span>
-                  <span>Homeadobe</span>
+                  <span>Homeābode</span>
                 </div>
               </Link>
             </div>
