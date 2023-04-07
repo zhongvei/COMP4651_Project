@@ -87,10 +87,6 @@ export default function Home() {
 		<>
 			<Landing />
 
-      <SectionTitle
-        pretitle="Watch a video"
-        title="Learn How Our Platform Works">
-      </SectionTitle>
 	  <Benefits data={benefitOne} />
 	  <SectionTitle
         pretitle="Watch a video"
