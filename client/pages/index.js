@@ -95,8 +95,7 @@ export default function Home() {
       <Video />
       
       <SectionTitle pretitle="FAQ" title="Frequently Asked Questions">
-        Answer your customers possible questions here, it will increase the
-        conversion rate as well as support or chat requests.
+        Below you will find answers to the most common questions we receive. If you have any other questions, please feel free to contact us.
       </SectionTitle>
       <Faq />
       <Footer />
