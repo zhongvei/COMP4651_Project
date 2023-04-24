@@ -4,22 +4,36 @@ import { ethers } from 'ethers';
 
 const StateContext = createContext();
 
-const regions = ["Causeway Bay", "Wan Chai", "Tsim Sha Tsui", "Sai Kung", "Central"]
-const buildings = [
+const REGIONS = ["Causeway Bay", "Wan Chai", "Tsim Sha Tsui", "Sai Kung", "Central"]
+const BUILDINGS = [
     ["The Hayworth", "Park Haven", "Vienna Mansion"],
     ["Suncrest Tower", "Starlight Garden", "Rialto Building"],
     ["The Masterpiece", "Harbour Pinnacle", "The Austin Block"],
     ["The Giverny", "Muk Min Shan", "Villa Royale"],
     ["Glenealy Building", "The Gage", "Kingearn Building"]
 ]
-const flats = ["A", "B", "C"];
+const FLATS = ["A", "B", "C"];
 
 const numFlats = 3;
 
+const PROPERTY_TYPE = ['Studio', 'Condo', 'Loft',];
+
+const generateFlatInfo = () => {
+    const flatInfo = [
+        PROPERTY_TYPE[Math.floor(Math.random() * PROPERTY_TYPE.length)], //random property type
+        Math.floor(Math.random() * 10 + 1), //random number of building Age
+        Math.floor(Math.random() * 1 + 1), //random number of toilet
+        Math.floor(Math.random() * 1), //random number of parking
+        Math.floor(Math.random() * 1), //bool for furnished condition
+        Math.floor(Math.random() * 1), //bool for pets
+    ]
+    return flatInfo;
+}
+
+
 export const StateContextProvider = ({ children }) => {
 
-    // TODO : add the contract address
-    const { contract } = useContract(process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS);
+    const { contract, } = useContract(process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS);
 
     // Address of your metamask
     const address = useAddress();
@@ -30,13 +44,21 @@ export const StateContextProvider = ({ children }) => {
     // Auto generate blockchain
     const generate = async () => {
         for (let i = 0; i < 2; ++i) {
-            for (let j = 0; j < buildings[i].length; ++j) {
-                const region = regions[i];
-                const building = buildings[i][j];
+            for (let j = 0; j < BUILDINGS[i].length; ++j) {
+                const region = REGIONS[i];
+                const building = BUILDINGS[i][j];
 
                 await contract.call('createBuilding', building, region);
                 for (let k = 0; k < numFlats; ++k) {
-                    await contract.call('createFlat', building, flats[k], ethers.utils.parseUnits((Math.random() * 10 + 1).toString(), "ether"), 10, 10, 10);
+                    await contract.call('createFlat', 
+                        building, //building name   
+                        FLATS[k], //flat name
+                        ethers.utils.parseUnits((Math.random() * 10 + 1).toString(), "ether"), //flat price 
+                        10, //rent duration
+                        Math.floor(Math.random() * 200 + 300), //flat area
+                        Math.floor(Math.random() * 4 + 1), //num of rooms
+                        generateFlatInfo(),
+                        );
                 }
             }
         }
