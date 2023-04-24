@@ -200,7 +200,7 @@ const Rent = () => {
                             <div className="flex flex-row justify-between items-center">
                                 <div className="flex flex-row items-center justify-center">
                                     <p className="font-bold text-3xl">
-                                        {selectedFlat?.price} ETH
+                                        {parseFloat(selectedFlat?.price).toFixed(5)} ETH
                                     </p>
                                     <p className="text-3xl">
                                         / month
