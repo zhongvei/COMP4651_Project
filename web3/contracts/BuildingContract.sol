@@ -18,6 +18,15 @@ contract BuildingContract {
         string flat
     );
 
+    struct FlatInfo {
+        string propertyType;
+        uint256 buildingAge;
+        uint256 baths;
+        uint256 parking;
+        bool furnished;
+        bool pets;
+    }
+
     struct Flat {
         address owner;
         string unit;
@@ -26,6 +35,7 @@ contract BuildingContract {
         uint256 area;
         uint256 room;
         bool vacant;
+        FlatInfo info;
     }
 
     struct Building {
@@ -83,7 +93,8 @@ contract BuildingContract {
         uint256 _price,
         uint256 _duartion,
         uint256 _area,
-        uint256 _room
+        uint256 _room,
+        FlatInfo memory _info
     ) public {
         uint256 index = temp[_buildingName];
 
@@ -97,7 +108,8 @@ contract BuildingContract {
             _duartion,
             _area,
             _room,
-            true
+            true,
+            _info
         );
         
         b1.flats.push(flat);
