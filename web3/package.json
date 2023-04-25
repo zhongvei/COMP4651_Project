@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
+    "@openzeppelin/contracts": "^4.8.3",
     "@thirdweb-dev/contracts": "^3"
   }
 }
+

@@ -1,8 +1,17 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-contract BuildingContract {
-    string public name;
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+
+contract BuildingContract is ERC721 {
+    Flat public EMPTY_FLAT;
+    // string public name;
+    mapping(address => uint256) numFlatOwned;
+    mapping(address => mapping(uint256 => Flat)) flatsOwnedByAddress; 
+    mapping(address => mapping(string => uint256)) mappingByIndex;
+
+    mapping(string => mapping(string => Flat)) mappingAddressToFlat; 
+
     mapping(string => uint256) temp;
     mapping(uint256 => Building) buildings;
     mapping(string => Building) buildingsName;
@@ -49,8 +58,7 @@ contract BuildingContract {
         Flat[] flats;
     }
 
-    constructor(string memory _name) {
-        name = _name;
+    constructor() ERC721("MyNFT","nft") {
         numOfBuildings = 0;
     }
 
@@ -118,7 +126,11 @@ contract BuildingContract {
         b.available++;
         b1.available++;
 
+        mappingAddressToFlat[_buildingName][_unit] = flat;
+
         mappings[b.name][_unit] = b.numFlats++;
+        flatsOwnedByAddress[msg.sender][numFlatOwned[msg.sender]] = flat;
+        mappingByIndex[msg.sender][flat.unit] = numFlatOwned[msg.sender]++;
     }
 
     function buyFlat(
@@ -148,6 +160,14 @@ contract BuildingContract {
         ++b1.taken;
 
         emit Buy(msg.sender, f.price / 1 ether, block.timestamp, flat);
+
+        mappingAddressToFlat[building][flat].unit = "";
+        mappingAddressToFlat[building][flat] = f;
+
+        uint256 i = mappingByIndex[f.owner][f.unit];
+        flatsOwnedByAddress[f.owner][i].unit = "";
+        _safeMint(msg.sender,numFlatOwned[msg.sender]);
+        flatsOwnedByAddress[msg.sender][numFlatOwned[msg.sender]++] = f;
         return success;
     }
 
@@ -179,4 +199,16 @@ contract BuildingContract {
     ) public view returns (Flat[] memory) {
         return buildingsName[_buildingName].flats;
     }
+
+    function getNumOfNFTs(address _address) public view returns (uint256) {
+        return balanceOf(_address);
+    }
+
+    function readNFT(string memory _building, string memory _flat) public view returns (Flat memory) {
+        Flat memory flat = mappingAddressToFlat[_building][_flat];
+        require(flat.owner == msg.sender, "not Onwer");
+        return flat;
+    }
+
+    
 }
