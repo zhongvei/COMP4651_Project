@@ -33,7 +33,7 @@ const generateFlatInfo = () => {
 
 export const StateContextProvider = ({ children }) => {
 
-    const { contract, } = useContract(process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS);
+    const { contract, isLoading } = useContract(process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS);
 
     // Address of your metamask
     const address = useAddress();
@@ -125,6 +125,7 @@ export const StateContextProvider = ({ children }) => {
         <StateContext.Provider
             value={{
                 address,
+                isLoading,
                 connect,
                 getAllBuildings,
                 getFlatByAddress,

@@ -3,13 +3,8 @@ import { useStateContext } from "../../context";
 
 const Rent = () => {
 
-    const locations = [
-        "Hong Kong Island",
-        "Kowloon",
-        "New Territories",
-    ];
-
-    const { getAllBuildings, getFlatByAddress } = useStateContext();
+    const { isLoading, getAllBuildings, getFlatByAddress } = useStateContext();
+    const [isDataLoading, setIsDataLoading] = React.useState(true);
     const [location, setLocation] = React.useState("Hong Kong");
     const [modal, setModal] = React.useState(true);
     const [buildingAddress, setBuildingAddress] = React.useState("");
@@ -17,8 +12,22 @@ const Rent = () => {
     const [selectedFlat, setSelectedFlat] = React.useState(null);
     const [questionare, setQuestionare] = React.useState(false);
 
+    useEffect(() => {
+        if (!isLoading) {
+            console.log("initializing data")
+            getBuildings()
+            .then((buildingAddress) => {
+                for (let i = 0; i < buildingAddress.length; ++i) {
+                    getFlats(buildingAddress[i]);
+                }
+            }).catch((err) => {
+                console.log(err);
+            })
+            .finally(() => { setIsDataLoading(false) });
+        }
+    }, [isLoading]);
+
     const getBuildings = async () => {
-        console.log("getBuildings");
         const buildings = await getAllBuildings();
         var buildingAddress = [];
         buildings.map((building) => {
@@ -31,10 +40,8 @@ const Rent = () => {
     };
 
     const getFlats = async (buildingAddress) => {
-        console.log("getFlats");
         const flats = await getFlatByAddress(buildingAddress);
         flats.map((flat) => {
-            console.log(flat);
             setFlats((prev) => [...prev, flat])
         });
     };
@@ -53,17 +60,8 @@ const Rent = () => {
             });
     };
 
-    const randomSelection = () => {
-        console.log("randomSelection");
-        const randomIndex = Math.floor(Math.random() * flats.length);
-        setSelectedFlat(flats[randomIndex]);
-    };
-
-    useEffect(() => {
-        randomSelection();
-    }, [flats]);
-
     const rentModal = () => {
+
         if (questionare) {
             return (
                 <div className="w-full h-full fixed top-0 left-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
@@ -72,7 +70,6 @@ const Rent = () => {
                             <div>
                                 <button className="float-right bg-black" onClick={() => {
                                     setModal(false);
-                                    initData();
                                 }}>
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -112,7 +109,6 @@ const Rent = () => {
                                 <div className="flex flex-row justify-between items-center">
                                     <button className="bg-blue-700 w-24 p-2" onClick={() => {
                                         setModal(false);
-                                        initData();
                                     }}>
                                         Submit
                                     </button>
@@ -131,7 +127,6 @@ const Rent = () => {
                             <div>
                                 <button className="float-right bg-black" onClick={() => {
                                     setModal(false);
-                                    initData();
                                 }}>
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -159,7 +154,6 @@ const Rent = () => {
                                 <div className="flex flex-row justify-between items-center">
                                     <button className="bg-blue-700 w-24 p-2" onClick={() => {
                                         setModal(false);
-                                        initData();
                                     }}>
                                         Search!
                                     </button>
@@ -172,6 +166,13 @@ const Rent = () => {
         }
     }
 
+    if (isLoading || isDataLoading) {
+        return (
+            <div className="w-full h-[88vh] flex items-center justify-center">
+                <div className="w-24 h-24 border-t-2 border-b-2 border-gray-900 rounded-full animate-spin"></div>
+            </div>
+        )
+    }
 
     return (
         <div className="w-full flex lg:flex-row">
@@ -224,7 +225,7 @@ const Rent = () => {
                                     setLocation(location.target.value)
                                 }}
                                 defaultValue={location}>
-                                {locations.map((item) => (
+                                {buildingAddress && buildingAddress.map((item) => (
                                     <option key={item} value={item}>{item}</option>
                                 ))}
                             </select>
