@@ -53,7 +53,7 @@ export const StateContextProvider = ({ children }) => {
                     await contract.call('createFlat', 
                         building, //building name   
                         FLATS[k], //flat name
-                        ethers.utils.parseUnits((Math.random() * 10 + 1).toString(), "ether"), //flat price 
+                        ethers.utils.parseUnits((Math.random() * 10 + 1).toFixed(2).toString(), "ether"), //flat price 
                         10, //rent duration
                         Math.floor(Math.random() * 200 + 300), //flat area
                         Math.floor(Math.random() * 4 + 1), //num of rooms
@@ -109,9 +109,19 @@ export const StateContextProvider = ({ children }) => {
         const parsedFlats = flats.map((flat) => ({
             building: building,
             unit: flat.unit,
+            price: ethers.utils.formatEther(flat.price.toString()),
+            duration: flat.duration.toNumber(),
             area: flat.area.toNumber(),
             room: flat.room.toNumber(),
-            price: ethers.utils.formatEther(flat.price.toString())
+            vacant: flat.vacant,
+            flatInfo: {
+                propertyType: flat.info[0],
+                buildingAge: flat.info[1].toNumber(),
+                baths: flat.info[2].toNumber(),
+                parking: flat.info[3].toNumber(),
+                furnished: flat.info[4],
+                pets: flat.info[5],
+            }
         }));
 
         return parsedFlats;
