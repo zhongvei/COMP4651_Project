@@ -2,12 +2,13 @@ import React, { useEffect } from "react";
 import { useStateContext } from "../../context";
 import { chooseBestFlat } from "../../utils/picker";
 import { PROPERTY_TYPE, REGIONS } from "../../utils/constants";
+import { toast } from "react-toastify";
 
 const Rent = () => {
 
     const { isLoading, getAllBuildings, getFlatByAddress } = useStateContext();
     const [isDataLoading, setIsDataLoading] = React.useState(true);
-    const [location, setLocation] = React.useState("Hong Kong");
+    const [location, setLocation] = React.useState("All");
     const [modal, setModal] = React.useState(true);
     const [buildingAddress, setBuildingAddress] = React.useState("");
     const [flats, setFlats] = React.useState([]);
@@ -134,7 +135,9 @@ const Rent = () => {
                 buildingAddress.push(building.address);
             }
         });
+        buildingAddress.unshift("All");
         setBuildingAddress(buildingAddress);
+        setLocation(buildingAddress[0]);
         return buildingAddress;
     };
 
@@ -244,7 +247,7 @@ const Rent = () => {
                                                             }}
                                                         />
                                                         :
-                                                        <select className="bg-white border border-black rounded px-2 py-1 mb-2" 
+                                                        <select className="bg-white border border-black rounded px-2 py-1 mb-2"
                                                             onChange={(e) => {
                                                                 setPreferences((prev) => {
                                                                     return {
@@ -254,7 +257,7 @@ const Rent = () => {
                                                                 })
                                                             }}
                                                         >
-                                                            <option disabled selected value> -- select an option -- </option>
+                                                            <option disabled selected value> -- Select an Option -- </option>
                                                             {
                                                                 PREFERENCE_ATTRIBUTES[attribute].options.map((option, index) => {
                                                                     return (
@@ -276,8 +279,13 @@ const Rent = () => {
                                 <div className="flex flex-row justify-between items-center pb-10">
                                     <button className="bg-blue-700 w-24 p-2" onClick={() => {
                                         setModal(false);
-                                        console.log(preferences);
-                                        // chooseBestFlat(flats, preferences, setSelectedFlat, setFlats);
+                                        console.log(chooseBestFlat(flats, preferences, setSelectedFlat, setFlats));
+                                        toast.success("Your search has been optimised!", {
+                                            position: "top-right",
+                                            autoClose: 3000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                        });
                                     }}>
                                         Search!
                                     </button>
@@ -323,7 +331,7 @@ const Rent = () => {
                                 <p className="font-bold text-white text-2xl">Rent Price</p>
                             </div>
                             <div className="flex flex-row justify-between items-center">
-                                <div className="flex flex-col justify-center my-2">
+                                <div className="flex flex-col justify-center my-2 mr-4">
                                     <p className="font-bold text-3xl">
                                         {
                                             !selectedFlat ?
@@ -350,8 +358,8 @@ const Rent = () => {
                 </div>
                 <div className="w-[50%] h-[88vh] bg-[#161616] flex items-center">
                     <div className="px-24">
-                        <div className="w-64 my-6">
-                            <select className="w-full h-10 px-3 placeholder-gray-600 border border-white focus:shadow-outline rounded-lg focus:outline-none focus:ring-2 ring-offset-current ring-offset-2"
+                        <div className="my-6 flex flex-row justify-between">
+                            <select className="w-48 h-10 px-3 placeholder-gray-600 border border-white focus:shadow-outline rounded-lg focus:outline-none focus:ring-2 ring-offset-current ring-offset-2"
                                 onChange={(location) => {
                                     setLocation(location.target.value)
                                 }}
@@ -360,6 +368,16 @@ const Rent = () => {
                                     <option key={item} value={item}>{item}</option>
                                 ))}
                             </select>
+                            <div>
+                                <button className="bg-[#3f6ad8] w-48 p-2 rounded"
+                                    onClick={() => {
+                                        setQuestionare(false);
+                                        setModal(true);
+                                    }}
+                                >
+                                    Search by preferences
+                                </button>
+                            </div>
                         </div>
                         <div className="relative h-[50vh] w-[35vw] overflow-y-auto">
                             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 overflow-scroll">
@@ -372,17 +390,19 @@ const Rent = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="overflow-y-scroll">
-                                    {flats.map((item, index) => (
-                                        <tr key={index} className={
-                                            item == selectedFlat ? "bg-[#2402F5] border-b text-white hover:cursor-pointer" :
-                                                "bg-[#0F0F0F] border-b text-white hover:cursor-pointer"
-                                        } onClick={() => { setSelectedFlat(item); }}>
-                                            <td className="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-white">{item.building}</td>
-                                            <td className="px-6 py-4">{item.unit}</td>
-                                            <td className="px-6 py-4">{item.area}</td>
-                                            <td className="px-6 py-4">{item.room}</td>
-                                        </tr>
-                                    ))}
+                                    {flats.map((item, index) => {
+                                        return (item.vacant && (location == item.address || location == "All") &&
+                                            <tr key={index} className={
+                                                item == selectedFlat ? "bg-[#2402F5] border-b text-white hover:cursor-pointer" :
+                                                    "bg-[#0F0F0F] border-b text-white hover:cursor-pointer"
+                                            } onClick={() => { setSelectedFlat(item); }}>
+                                                <td className="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-white">{item.building}</td>
+                                                <td className="px-6 py-4">{item.unit}</td>
+                                                <td className="px-6 py-4">{item.area}</td>
+                                                <td className="px-6 py-4">{item.room}</td>
+                                            </tr>
+                                        )
+                                    })}
                                 </tbody>
                             </table>
                         </div>

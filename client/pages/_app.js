@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import Head from "next/head";
 import Router, { useRouter } from "next/router";
 
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 import NProgress from "nprogress"; // nprogress module
 import "nprogress/nprogress.css"; // styles of nprogress
 
@@ -65,6 +68,7 @@ function MyApp({ Component, pageProps }) {
 			</Head>
 			<StateContextProvider>
 				<Navbar />
+                <ToastContainer />
 				<Component {...pageProps} />
 			</StateContextProvider>
 		</ThirdwebProvider>
