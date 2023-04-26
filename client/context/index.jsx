@@ -109,9 +109,18 @@ export const StateContextProvider = ({ children }) => {
         const parsedFlats = flats.map((flat) => ({
             building: building,
             unit: flat.unit,
+            price: ethers.utils.formatEther(flat.price.toString()),
+            duration: flat.duration.toNumber(),
             area: flat.area.toNumber(),
             room: flat.room.toNumber(),
-            price: ethers.utils.formatEther(flat.price.toString())
+            flatInfo: {
+                propertyType: flat.info[0],
+                buildingAge: flat.info[1].toNumber(),
+                baths: flat.info[2].toNumber(),
+                parking: flat.info[3].toNumber(),
+                furnished: flat.info[4],
+                pets: flat.info[5],
+            }
         }));
 
         return parsedFlats;
