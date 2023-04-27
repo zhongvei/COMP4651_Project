@@ -1,19 +1,11 @@
-export const chooseBestFlat = ( flats, preference, setSelectedFlat ) => {
-    preference = {
-        "incomeRange": 40000,
-        "rentalPrice": 4,
-        "propertyType": "Studio",
-        "location": "Causeway Bay",
-        "room": 1,
-        "flatSize": 400,
-        "furnished": true,
-        "duration": 12,
-        "buildingAge": 10,
-        "bathrooms": 1,
-        "parking": false,
-        "pets": false,
-    }
-    // loop over flats to calculate score
+import { exchangeRate } from "./converter";
+
+export const chooseBestFlat = async ( flats, preference, setSelectedFlat ) => {
+
+    const rate =  await exchangeRate('ethereum', 'hkd');
+
+    preference.rentalPrice = preference.rentalPrice / rate;
+
     flats.forEach(flat => {
         let score = 0;
         if (preference.rentalPrice >= flat.price) {
