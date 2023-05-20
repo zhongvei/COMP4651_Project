@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "export": "next export",
-    "deploy": "next build && next export && npx thirdweb@latest upload out"
+    "deploy": "next build && next export && next start"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.13",
