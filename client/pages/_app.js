@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Head from "next/head";
 import Router, { useRouter } from "next/router";
+import { Sepolia } from "@thirdweb-dev/chains";
 
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -8,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import NProgress from "nprogress"; // nprogress module
 import "nprogress/nprogress.css"; // styles of nprogress
 
-import { ThirdwebProvider } from "@thirdweb-dev/react";
+import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
 import { StateContextProvider } from "../context";
 import { Navbar } from "../components";
 import "../styles/globals.css";
@@ -24,7 +25,6 @@ import {
 	Legend,
 } from "chart.js";
 
-import { routeMapper } from "../routes";
 
 ChartJS.register(
 	CategoryScale,
@@ -39,7 +39,7 @@ ChartJS.register(
 // This is the chain your dApp will work on.
 // Change this to the chain your app is built for.
 // You can also import additional chains from `@thirdweb-dev/chains` and pass them directly.
-const activeChain = "170";
+const activeChain = Sepolia
 
 function MyApp({ Component, pageProps }) {
 	const router = useRouter();
